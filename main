@@ -1,0 +1,292 @@
+let input;
+let butt;
+let epselect;
+let vid;
+let img;
+let amountofcuts = 10;
+let fucksake = false;
+let originalwidth = 0
+let originalheight = 0
+let loading = false
+let notafile = false
+let alink
+let blink
+let clink
+let dlink
+function setup() {
+  
+  
+  dropzone = select("canvas");
+  dropzone.dragOver(draggingover);
+  dropzone.drop(dropped);
+  let sketchcanvas = createCanvas(windowWidth, windowHeight * 2);
+  originalwidth = windowWidth
+  originalheight = windowHeight
+  
+  alink = createA('https://www.google.com/search?q=benjamin+button&oq=benjamin+button&gs_lcrp=EgZjaHJvbWUqBggAEEUYOzIGCAAQRRg7MgYIARBFGDwyBggCEEUYPdIBCDI4MDZqMGo0qAIAsAIB&sourceid=chrome&ie=UTF-8', 'Benjamin Button', '_top')
+  alink.position(width / 2 - 60, originalheight * 1.5 + 140)
+   
+  blink = createA('https://www.youtube.com/PodcastAboutList', 'Podcast About List', '_top')
+  blink.position(width / 2 - 65, originalheight * 1.5 + 170)
+  
+  clink = createA('https://github.com/yzhkkhzy/benjamin-button-curio-creator', 'source code', '_top')
+  clink.position(width / 2 - 45, originalheight * 1.5 + 200)
+
+  dlink = createA('https:/yzhkinstruments.com', 'me :)', '_top')
+  dlink.position(width / 2 - 15, originalheight * 1.5 + 230)
+  
+  input = createFileInput(handleImage);
+  input.position(width / 2 - 60, 150);
+
+  epselect = createSelect();
+  epselect.position(width / 2 - 40, 215);
+  for (let i = 1; i < 11; i++) {
+    epselect.option(i);
+  }
+  epselect.changed(changeselection);
+  epselect.hide();
+
+  // dont forget to turn this on
+  sketchcanvas.parent('sketchContainer');
+  input.parent('sketchContainer');
+  epselect.parent('sketchContainer')
+  alink.parent('sketchContainer')
+    blink.parent('sketchContainer')
+    clink.parent('sketchContainer')
+  dlink.parent('sketchContainer')
+}
+function draggingover() {
+  bkg = 50;
+}
+function dropped(file) {
+  handleImage(file);
+  bkg = 0;
+}
+let vidready = false;
+let bkg = 0;
+let extraspace = 290;
+let aa 
+function draw() {
+  // print(mouseX + 'mousex')
+  // print(mouseY + 'mousey')
+  background(bkg);
+  textAlign(CENTER, CENTER);
+  textSize(15);
+  fill(255)
+  if (notafile) {
+    text('thats not a video file dumbass', width / 2, 300)
+  }
+  if (!fucksake) {
+    textSize(50)
+    push()
+    scale(1,2.5)
+    blendMode(ADD)
+    fill(255, 0, 0)
+    text('BENJAMIN BUTTON CURIO CREATOR', width / 2 - -4, 30)
+    fill(0, 255, 0)
+    text('BENJAMIN BUTTON CURIO CREATOR', width / 2 , 32)
+    fill(0,0,255)
+    text('BENJAMIN BUTTON CURIO CREATOR', width / 2 + 4, 34)
+    pop()
+    textSize(15);
+    blendMode(BLEND)
+    text("or drag and drop your copy of benjamin button here", width / 2 - 15, 190);
+    text('this project was made as a tool for listeners of', width / 2, originalheight * 1.5)
+    text('PODCAST ABOUT LIST - 5 WEEKS OF BENJAMIN BUTTON', width / 2, originalheight * 1.5 + 30)
+    text('please enjoy :)', width / 2, originalheight * 1.5 + 90)
+    // fill(0,255, 0)
+    text('(* no ai was used in the making of this project *)', width / 2, originalheight * 1.5 + 60)
+    
+    if (vidready) {
+      text("select curio", width / 2 - 15, 260);
+      
+    }
+    if ((!vidready) && loading) {
+      text('loading, please wait a moment', width / 2, 300)
+    }
+  }
+  if (fucksake) {
+    text("click anywhere to exit full screen", displayWidth / 2, 125);
+    if (vidready) {
+      image(
+        vid,
+        displayWidth / 2 - regularwidth / 2,
+        height / 2 - regularheight / 2,
+        regularwidth,
+        regularheight
+      );
+    }
+  }
+
+  if (!fucksake) {
+    if (vidready) {
+      image(
+        vid,
+        width / 2 - regularwidth / 2,
+        extraspace,
+        regularwidth,
+        regularheight
+      );
+      butt.drawbutt();
+    }
+    
+  }
+  if (vidready) {
+    if (vid.time() > endtime || vid.time() == vid.duration()) {
+      vid.play();
+      vid.time(starttime);
+    }
+    }
+}
+let starttime;
+let endtime;
+
+function handleImage(file) {
+  vidready = false
+  if (file.type === "video") {
+    vid = createVideo(file.data, videodoneloading);
+    loading = true
+    notafile = false
+  } else {
+    vid = null;
+    notafile = true
+  }
+}
+
+function changetime() {
+  let index = epselect.selected();
+  starttime = (index - 1) * (vid.duration() / amountofcuts);
+  endtime = starttime + vid.duration() / amountofcuts;
+  vid.time(starttime);
+  vid.hide();
+}
+
+function changeselection() {
+  changetime();
+  if (butt.state == "playing") {
+    butt.switchstates();
+  }
+}
+
+function videodoneloading() {
+  loading = false
+  setscaling(width / 25);
+  vidready = true;
+  butt = new button(width / 2, extraspace + regularheight + 50, 50, "playing");
+  changetime();
+  epselect.show();
+}
+
+class button {
+  // let textual
+  constructor(posx, posy, size, state) {
+    this.posx = posx;
+    this.posy = posy;
+    this.size = size;
+    this.state = "paused";
+    this.statecheck();
+    this.bordradius = 50;
+  }
+  statecheck() {
+    if (this.state == "playing") {
+      this.textual = "pause";
+    }
+    if (this.state == "paused") {
+      this.textual = "play";
+    }
+  }
+  switchstates() {
+    if (this.state == "playing") {
+      vid.pause();
+      this.textual = "play";
+      this.state = "paused";
+    } else if (this.state == "paused") {
+      vid.play();
+      this.textual = "pause";
+      this.state = "playing";
+    }
+  }
+  checkbutt(mousex, mousey) {
+    if (dist(mouseX, mouseY, this.posx, this.posy) < this.size / 2) {
+      this.switchstates();
+    }
+    if (
+      dist(mouseX, mouseY, this.posx, this.posy + 50) < this.size / 2 &&
+      fucksake == false
+    ) {
+      turnfullscreenonem();
+    }
+  }
+
+  drawbutt() {
+    fill(255);
+    rectMode(CENTER);
+    rect(
+      this.posx,
+      this.posy,
+      this.size * 1.5,
+      this.size / 1.5,
+      this.bordradius
+    );
+    fill(0);
+    textAlign(CENTER, CENTER);
+    textSize(15);
+    text(this.textual, this.posx, this.posy);
+
+    fill(255);
+    rectMode(CENTER);
+    rect(
+      this.posx,
+      this.posy + 50,
+      this.size * 1.5,
+      this.size / 1.5,
+      this.bordradius
+    );
+    fill(0);
+    textAlign(CENTER, CENTER);
+    textSize(15);
+    text("fullscreen", this.posx, this.posy + 50);
+  }
+}
+function turnfullscreenonem() {
+  fullscreen(true);
+  fucksake = true;
+  resizeCanvas(displayWidth, displayHeight);
+  setscaling(displayWidth / 25);
+  epselect.hide();
+  input.hide();
+  alink.hide()
+  blink.hide()
+  clink.hide()
+  if (butt.state == "paused") {
+    butt.switchstates();
+  }
+}
+function turnfullscreenoffem() {
+  epselect.show();
+  input.show();
+  alink.show()
+  blink.show()
+  clink.show()
+  resizeCanvas(originalwidth, originalheight * 3);
+  setscaling(width / 25);
+  fullscreen(false);
+  fucksake = false;
+}
+function mousePressed() {
+  if (vid && vidready) butt.checkbutt(mouseX, mouseY);
+  if (fullscreen()) {
+    turnfullscreenoffem();
+  }
+}
+
+let padding;
+let regularheight;
+let regularwidth;
+let scalecutter = 25;
+function setscaling(scaling) {
+  padding = scaling;
+  regularheight = 9 * scaling;
+  regularwidth = 16 * scaling;
+}
+
