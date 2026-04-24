@@ -21,21 +21,27 @@ function setup() {
   dropzone = select("canvas");
   dropzone.dragOver(draggingover);
   dropzone.drop(dropped);
-  let sketchcanvas = createCanvas(windowWidth, windowHeight * 2);
+  let sketchcanvas = createCanvas(windowWidth, windowHeight * 3);
   originalwidth = windowWidth
   originalheight = windowHeight
   
   alink = createA('https://www.google.com/search?q=benjamin+button&oq=benjamin+button&gs_lcrp=EgZjaHJvbWUqBggAEEUYOzIGCAAQRRg7MgYIARBFGDwyBggCEEUYPdIBCDI4MDZqMGo0qAIAsAIB&sourceid=chrome&ie=UTF-8', 'Benjamin Button', '_top')
-  alink.position(width / 2 - 60, originalheight * 1.5 + 140)
+  // alink.position(width / 2 - 60, originalheight * 1.5 + 140)
    
   blink = createA('https://www.youtube.com/PodcastAboutList', 'Podcast About List', '_top')
-  blink.position(width / 2 - 65, originalheight * 1.5 + 170)
+  // blink.position(width / 2 - 65, originalheight * 1.5 + 170)
   
+//   dont forget to fix this
   clink = createA('https://github.com/yzhkkhzy/benjamin-button-curio-creator', 'source code', '_top')
-  clink.position(width / 2 - 45, originalheight * 1.5 + 200)
+  // clink.position(width / 2 - 45, originalheight * 1.5 + 200)
 
-  dlink = createA('https:/yzhkinstruments.com', 'me :)', '_top')
-  dlink.position(width / 2 - 15, originalheight * 1.5 + 230)
+  dlink = createA('https://yzhkinstruments.com', 'me :)', '_top')
+  // dlink.position(width / 2 - 15, originalheight * 1.5 + 230)
+  
+  alink.position(width / 2 - 60, extraspace + regularheight + 270)
+  blink.position(width / 2 - 65, extraspace + regularheight + 300)
+  clink.position(width / 2 - 45, extraspace + regularheight + 330)
+  dlink.position(width / 2 - 15, extraspace + regularheight + 370)
   
   input = createFileInput(handleImage);
   input.position(width / 2 - 60, 150);
@@ -49,13 +55,13 @@ function setup() {
   epselect.hide();
 
   // dont forget to turn this on
-  sketchcanvas.parent('sketchContainer');
-  input.parent('sketchContainer');
-  epselect.parent('sketchContainer')
-  alink.parent('sketchContainer')
-    blink.parent('sketchContainer')
-    clink.parent('sketchContainer')
-  dlink.parent('sketchContainer')
+  // sketchcanvas.parent('sketchContainer');
+  // input.parent('sketchContainer');
+  // epselect.parent('sketchContainer')
+//   alink.parent('sketchContainer')
+  //   blink.parent('sketchContainer')
+  //   clink.parent('sketchContainer')
+  // dlink.parent('sketchContainer')
 }
 function draggingover() {
   bkg = 50;
@@ -84,7 +90,7 @@ function draw() {
     scale(1,2.5)
     blendMode(ADD)
     fill(255, 0, 0)
-    text('BENJAMIN BUTTON CURIO CREATOR', width / 2 - -4, 30)
+    text('BENJAMIN BUTTON CURIO CREATOR', width / 2 - 4, 30)
     fill(0, 255, 0)
     text('BENJAMIN BUTTON CURIO CREATOR', width / 2 , 32)
     fill(0,0,255)
@@ -93,11 +99,10 @@ function draw() {
     textSize(15);
     blendMode(BLEND)
     text("or drag and drop your copy of benjamin button here", width / 2 - 15, 190);
-    text('this project was made as a tool for listeners of', width / 2, originalheight * 1.5)
-    text('PODCAST ABOUT LIST - 5 WEEKS OF BENJAMIN BUTTON', width / 2, originalheight * 1.5 + 30)
-    text('please enjoy :)', width / 2, originalheight * 1.5 + 90)
-    // fill(0,255, 0)
-    text('(* no ai was used in the making of this project *)', width / 2, originalheight * 1.5 + 60)
+    text('this project was made as a tool for listeners of', width / 2, extraspace + regularheight + 150)
+    text('PODCAST ABOUT LIST - 5 WEEKS OF BENJAMIN BUTTON', width / 2, extraspace + regularheight + 180)
+    text('please enjoy :)', width / 2, extraspace + regularheight + 210)
+    text('(* no ai was used in the making of this project *)', width / 2, extraspace + regularheight + 240)
     
     if (vidready) {
       text("select curio", width / 2 - 15, 260);
@@ -177,6 +182,10 @@ function videodoneloading() {
   butt = new button(width / 2, extraspace + regularheight + 50, 50, "playing");
   changetime();
   epselect.show();
+  alink.position(width / 2 - 60, extraspace + regularheight + 270)
+  blink.position(width / 2 - 65, extraspace + regularheight + 300)
+  clink.position(width / 2 - 45, extraspace + regularheight + 330)
+  dlink.position(width / 2 - 15, extraspace + regularheight + 370)
 }
 
 class button {
@@ -260,6 +269,7 @@ function turnfullscreenonem() {
   alink.hide()
   blink.hide()
   clink.hide()
+  dlink.hide()
   if (butt.state == "paused") {
     butt.switchstates();
   }
@@ -270,6 +280,7 @@ function turnfullscreenoffem() {
   alink.show()
   blink.show()
   clink.show()
+  dlink.show()
   resizeCanvas(originalwidth, originalheight * 3);
   setscaling(width / 25);
   fullscreen(false);
@@ -283,7 +294,7 @@ function mousePressed() {
 }
 
 let padding;
-let regularheight;
+let regularheight = 0;
 let regularwidth;
 let scalecutter = 25;
 function setscaling(scaling) {
